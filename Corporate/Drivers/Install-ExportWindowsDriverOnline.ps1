@@ -23,7 +23,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 $TaskName = 'Export-WindowsDriverOnline'
 $TaskPath = '\Corporate\Drivers'
 $Description = @"
-Exports third party drivers to $env:SystemDrive\ExportedDrivers
+Exports third party drivers to $env:SystemDrive\ExportDrivers
 Transcripts are stored in $env:SystemRoot\Logs\Drivers  
 Runs as SYSTEM and does not display any progress or results  
 PowerShell Encoded Script  
@@ -44,7 +44,7 @@ Start-Transcript -Path (Join-Path $TaskLogs $TaskLogName)
 #   Main
 #======================================================================================
 #if (!(Test-Path $TaskLogs)) {New-Item $TaskLogs -ItemType Directory -Force | Out-Null}
-Export-WindowsDriver -Online -Destination $env:SystemDrive\ExportedDrivers
+Export-WindowsDriver -Online -Destination $env:SystemDrive\ExportDrivers
 #======================================================================================
 #   Complete
 #======================================================================================
