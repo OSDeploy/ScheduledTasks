@@ -1,13 +1,34 @@
-#Requires -RunAsAdministrator
-
+#======================================================================================
+#   Run as Administrator Elevated
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Write-Verbose "Checking User Account Control settings" -Verbose
+    if ((Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System).EnableLUA -eq 0) {
+        #UAC Disabled
+        Write-Verbose "User Account Control is Disabled" -Verbose
+        Write-Verbose "You will need to correct your UAC Settings before running this script" -Verbose
+        Write-Verbose "Try running this script in an Elevated PowerShell session ... Exiting" -Verbose
+        Start-Sleep -s 10
+        Exit 0
+    } else {
+        #UAC Enabled
+        Write-Verbose "UAC is Enabled. Relaunching script with Elevated Permissions" -Verbose
+        Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs -Wait
+        Exit 0
+    }
+} else {
+    Write-Verbose "Running with Elevated Permissions" -Verbose
+}
+#======================================================================================
+#   Task Properties
 $TaskName = 'Set-ExecutionPolicy Bypass'
-$TaskPath = '\PowerShell'
+$TaskPath = '\Corporate\PowerShell'
 $Description = @"
-Version 21.1.18  
+Version 21.1.19  
 Set-ExecutionPolicy Bypass -Force  
 Runs as SYSTEM and does not display any progress or results
 "@
-
+#======================================================================================
+#   Splat the Task
 $Action = @{
     Execute = 'powershell.exe'
     Argument = 'Set-ExecutionPolicy Bypass -Force'
@@ -28,9 +49,11 @@ $ScheduledTask = @{
     Settings = New-ScheduledTaskSettingsSet @Settings
     Description = $Description
 }
-
+#======================================================================================
+#   Build the Task
 New-ScheduledTask @ScheduledTask | Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -Force
-
+#======================================================================================
+#   Apply Authenticated User Permissions
 $Scheduler = New-Object -ComObject "Schedule.Service"
 $Scheduler.Connect()
 $GetTask = $Scheduler.GetFolder($TaskPath).GetTask($TaskName)

@@ -20,18 +20,18 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 }
 #======================================================================================
 #   Task Properties
-$TaskName = 'Set-ExecutionPolicy Restricted '
-$TaskPath = '\Corporate\PowerShell'
+$TaskName = 'Enable-TaskSchedulerHistory'
+$TaskPath = '\Corporate\TaskScheduler'
 $Description = @"
 Version 21.1.19  
-Set-ExecutionPolicy Restricted -Force  
-Runs as SYSTEM and does not display any progress or results
+wevtutil set-log Microsoft-Windows-TaskScheduler/Operational /enabled:true  
+Runs as SYSTEM and does not display any progress or results  
 "@
 #======================================================================================
 #   Splat the Task
 $Action = @{
-    Execute = 'powershell.exe'
-    Argument = 'Set-ExecutionPolicy Restricted -Force'
+    Execute = 'wevtutil.exe'
+    Argument = 'set-log Microsoft-Windows-TaskScheduler/Operational /enabled:true'
 }
 $Principal = @{
     UserId = 'SYSTEM'

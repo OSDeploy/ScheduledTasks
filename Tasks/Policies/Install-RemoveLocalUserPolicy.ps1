@@ -20,18 +20,45 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 }
 #======================================================================================
 #   Task Properties
-$TaskName = 'Set-ExecutionPolicy Restricted '
-$TaskPath = '\Corporate\PowerShell'
+$TaskName = 'Remove-LocalUserPolicy'
+$TaskPath = '\Corporate\Policies'
 $Description = @"
 Version 21.1.19  
-Set-ExecutionPolicy Restricted -Force  
-Runs as SYSTEM and does not display any progress or results
+Deletes all files in $env:SystemRoot\System32\GroupPolicy\User  
+Transcripts are stored in $env:SystemRoot\Logs\Policies  
+Runs as SYSTEM and does not display any progress or results  
+PowerShell Encoded Script
 "@
+#======================================================================================
+#   Script
+$TaskScript = @'
+$TaskName = 'Remove-LocalUserPolicy'
+#======================================================================================
+#   Logs
+#======================================================================================
+$TaskLogs = "$env:SystemRoot\Logs\Policies"
+if (!(Test-Path $TaskLogs)) {New-Item $TaskLogs -ItemType Directory -Force | Out-Null}
+$TaskLogName = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-$TaskName.log"
+Start-Transcript -Path (Join-Path $TaskLogs $TaskLogName)
+#======================================================================================
+#   Main
+#======================================================================================
+if (Test-Path $env:SystemRoot\System32\GroupPolicy\User) {
+    Remove-Item $env:SystemRoot\System32\GroupPolicy\User\* -Recurse -Force -ErrorAction SilentlyContinue
+}
+#======================================================================================
+#   Complete
+#======================================================================================
+Stop-Transcript
+'@
+#======================================================================================
+#   Encode the Script
+$EncodedCommand = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($TaskScript))
 #======================================================================================
 #   Splat the Task
 $Action = @{
     Execute = 'powershell.exe'
-    Argument = 'Set-ExecutionPolicy Restricted -Force'
+    Argument = "-ExecutionPolicy ByPass -EncodedCommand $EncodedCommand"
 }
 $Principal = @{
     UserId = 'SYSTEM'
