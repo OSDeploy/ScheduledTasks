@@ -23,9 +23,9 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 $TaskName = 'Set-ExecutionPolicy Restricted '
 $TaskPath = '\Corporate\PowerShell'
 $Description = @"
-Version 21.1.19  
 Set-ExecutionPolicy Restricted -Force  
-Runs as SYSTEM and does not display any progress or results
+Runs as SYSTEM and does not display any progress or results  
+Version 21.1.19
 "@
 #======================================================================================
 #   Splat the Task

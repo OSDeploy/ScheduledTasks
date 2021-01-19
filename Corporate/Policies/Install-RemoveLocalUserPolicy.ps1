@@ -23,11 +23,11 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 $TaskName = 'Remove-LocalUserPolicy'
 $TaskPath = '\Corporate\Policies'
 $Description = @"
-Version 21.1.19  
 Deletes all files in $env:SystemRoot\System32\GroupPolicy\User  
 Transcripts are stored in $env:SystemRoot\Logs\Policies  
 Runs as SYSTEM and does not display any progress or results  
-PowerShell Encoded Script
+PowerShell Encoded Script  
+Version 21.1.19
 "@
 #======================================================================================
 #   Script

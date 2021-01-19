@@ -23,9 +23,9 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 $TaskName = 'Enable-TaskSchedulerHistory'
 $TaskPath = '\Corporate\TaskScheduler'
 $Description = @"
-Version 21.1.19  
 wevtutil set-log Microsoft-Windows-TaskScheduler/Operational /enabled:true  
 Runs as SYSTEM and does not display any progress or results  
+Version 21.1.19
 "@
 #======================================================================================
 #   Splat the Task

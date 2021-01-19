@@ -55,8 +55,6 @@ Stop-Transcript
 $EncodedCommand = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($TaskScript))
 #======================================================================================
 #   Splat the Task
-#======================================================================================
-#   Splat the Task
 $Action = @{
     Execute = 'powershell.exe'
     Argument = "-ExecutionPolicy ByPass -EncodedCommand $EncodedCommand"
