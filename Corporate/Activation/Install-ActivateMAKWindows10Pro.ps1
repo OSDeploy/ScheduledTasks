@@ -39,7 +39,7 @@ $MakKey = 'XXXXX-XXXXX-XXXXX-XXXXX-XXXXX'
 #======================================================================================
 #   Logs
 #======================================================================================
-$TaskLogs = "$env:SystemRoot\Logs\Drivers"
+$TaskLogs = "$env:SystemRoot\Logs\Activation"
 if (!(Test-Path $TaskLogs)) {New-Item $TaskLogs -ItemType Directory -Force | Out-Null}
 $TaskLogName = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-$TaskName.log"
 Start-Transcript -Path (Join-Path $TaskLogs $TaskLogName)
