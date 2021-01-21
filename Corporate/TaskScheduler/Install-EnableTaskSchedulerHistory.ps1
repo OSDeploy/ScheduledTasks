@@ -25,7 +25,7 @@ $TaskPath = '\Corporate\TaskScheduler'
 $Description = @"
 wevtutil set-log Microsoft-Windows-TaskScheduler/Operational /enabled:true  
 Runs as SYSTEM and does not display any progress or results  
-Version 21.1.19
+Version 21.1.21
 "@
 #======================================================================================
 #   Splat the Task
@@ -34,14 +34,19 @@ $Action = @{
     Argument = 'set-log Microsoft-Windows-TaskScheduler/Operational /enabled:true'
 }
 $Principal = @{
-    UserId = 'SYSTEM'
+    UserId = 'NT AUTHORITY\SYSTEM'
+    LogonType = 'ServiceAccount'
     RunLevel = 'Highest'
 }
 $Settings = @{
     AllowStartIfOnBatteries = $true
     Compatibility = 'Win8'
-    MultipleInstances = 'Parallel'
+    DontStopIfGoingOnBatteries = $true
+    DontStopOnIdleEnd = $true
     ExecutionTimeLimit = (New-TimeSpan -Minutes 60)
+    MultipleInstances = 'IgnoreNew'
+    Priority = 0
+    StartWhenAvailable = $true
 }
 $ScheduledTask = @{
     Action = New-ScheduledTaskAction @Action

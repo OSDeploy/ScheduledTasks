@@ -23,11 +23,11 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 $TaskName = 'Export-WindowsDriverOnline'
 $TaskPath = '\Corporate\Drivers'
 $Description = @"
-Exports third party drivers to $env:SystemDrive\ExportedDrivers
+Exports third party drivers to $env:SystemDrive\ExportDrivers
 Transcripts are stored in $env:SystemRoot\Logs\Drivers  
 Runs as SYSTEM and does not display any progress or results  
 PowerShell Encoded Script  
-Version 21.1.19
+Version 21.1.21
 "@
 #======================================================================================
 #   Script
@@ -44,7 +44,7 @@ Start-Transcript -Path (Join-Path $TaskLogs $TaskLogName)
 #   Main
 #======================================================================================
 #if (!(Test-Path $TaskLogs)) {New-Item $TaskLogs -ItemType Directory -Force | Out-Null}
-Export-WindowsDriver -Online -Destination $env:SystemDrive\ExportedDrivers
+Export-WindowsDriver -Online -Destination $env:SystemDrive\ExportDrivers
 #======================================================================================
 #   Complete
 #======================================================================================
@@ -60,14 +60,19 @@ $Action = @{
     Argument = "-ExecutionPolicy ByPass -EncodedCommand $EncodedCommand"
 }
 $Principal = @{
-    UserId = 'SYSTEM'
+    UserId = 'NT AUTHORITY\SYSTEM'
+    LogonType = 'ServiceAccount'
     RunLevel = 'Highest'
 }
 $Settings = @{
     AllowStartIfOnBatteries = $true
     Compatibility = 'Win8'
-    MultipleInstances = 'Parallel'
+    DontStopIfGoingOnBatteries = $true
+    DontStopOnIdleEnd = $true
     ExecutionTimeLimit = (New-TimeSpan -Minutes 60)
+    MultipleInstances = 'IgnoreNew'
+    Priority = 0
+    StartWhenAvailable = $true
 }
 $ScheduledTask = @{
     Action = New-ScheduledTaskAction @Action
