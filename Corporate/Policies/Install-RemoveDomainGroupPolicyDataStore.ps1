@@ -58,7 +58,7 @@ $EncodedCommand = [System.Convert]::ToBase64String([System.Text.Encoding]::Unico
 #   Splat the Task
 $Action = @{
     Execute = 'powershell.exe'
-    Argument = "-ExecutionPolicy ByPass -EncodedCommand $EncodedCommand"
+    Argument = "-EncodedCommand $EncodedCommand"
 }
 $Principal = @{
     UserId = 'NT AUTHORITY\SYSTEM'
